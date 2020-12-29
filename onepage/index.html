@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<link rel="stylesheet" href="style.css">
+<script>
+/*
+* Native Javascript implementation for Asyc connection
+* retrieving from API
+*/
+function LoadEmulatedAPI() {
+  var tmpl = document.getElementById('llbtemplate').innerHTML;
+
+  var req = new XMLHttpRequest();
+  req.overrideMimeType("application/json");
+  req.open('GET', "emulate_endpoint_api.json", true);
+  req.onload  = function() {
+    var jsonResponse = JSON.parse(req.responseText);
+
+    for (i=0;i<3;i++) {
+
+      e = tmpl
+      for (x of Object.keys(jsonResponse[i])) {
+        e = e.replace('{'+x+'}',jsonResponse[i][x])
+      }
+      e = e.replace('{pix}','imgs/atty/'+jsonResponse[i]['name'].replace(' ','-').replace('\.','').toLowerCase()+'.jpg')
+
+      document.getElementById('llblist').innerHTML += e;
+    }
+
+  };
+  req.send(null);
+
+}
+
+
+</script>
+</head>
+<body style="font-family:Verdana;margin:0;padding:0" onload="LoadEmulatedAPI()">
+
+<!-- header -->
+<div style="background-color:#fff;">
+  <span style="width:50%;">
+      <img src="imgs/logo1.png" style="max-width:100%;height:auto;">
+      <span><img src="imgs/logo1_caption.png"></span>
+  </span>
+</div>
+
+<!-- body -->
+<div style="overflow:auto;background-color:#003669;color:#fff;padding-top:3em;">
+  <div>
+    <h1>Find a Lawyer for your Legal Issue</h1>
+    <h2>Fast, Free and Confidential</h2>
+  </div>
+  <div class="left">
+    <div>Enter Zip Code or City</div>
+    <div><input type="textbox" value="-- Just for show --"></div>
+    <div>Choose a category</div>
+    <div><input type="textbox" value="-- Just for show --"></div>
+
+  </div>
+
+
+  <div id="llblist" class="right" style="padding:0;margin:0;">
+    <!-- list of attys here -->
+  </div>
+</div>
+
+<!-- foother -->
+<div style="overflow:auto;margin-top:3em;">
+  <div class="footmin left">
+    <img src="imgs/logo_small.png">
+  </div>
+
+  <div class="main" style="text-align:center;">
+    <div>User agreement etc</div>
+    <div>Copyright </div>
+
+  </div>
+
+  <div class="footmin right" style="background-color:#fff;">
+    <img src="imgs/badges.png">
+  </div>
+</div>
+
+<div style="display:none" id="llbtemplate">
+  <div class="llblist_elements" style="padding-top:1em;padding-bottom:1em;">
+    <div class="llblist_basic">
+      <div class="profilepix"><img src="{pix}" /></div>
+      <div class="profilename">{name}</div>
+      <div class="profilename" style="font-size:.8em">{location}</div>
+    </div>
+    <div  class="llblist_extended">
+      <div><strong>{category}</strong><span style='float:right'>{rating}</span></div>
+      <div>{content}</div>
+      <div style="text-align:right"><a href="{link}">Read Review</a></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
